@@ -46,3 +46,16 @@ Sent email from: <br>
 visit http://(your link).com/admin<br>
 Pass : admin<br>
 User : admin@gmail.com<br>
+
+# Check User Level
+controller.php
+`//check user level`<br>
+`if(empty($data['role'])){`<br>
+    `redirect(site_url().'main/login/');`<br>
+`}`<br>
+`$dataLevel = $this->userlevel->checkLevel($data['role']);`<br>
+`//check user level`<br><br>
+
+`if($dataLevel == "is_admin"){`<br>
+  `(your code here)`<br>
+`}`<br>
