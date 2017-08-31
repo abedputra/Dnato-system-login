@@ -63,3 +63,6 @@ controller.php<br>
 # LICENSE
 The MIT License (MIT)<br>
 Copyright (c) 2017, Abed Putra<br>
+<br>
+Feel free to send me an email if you have any problems.<br>
+Thank you, abedputra@gmail.com @abedputra.
