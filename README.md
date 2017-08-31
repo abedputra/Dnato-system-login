@@ -48,7 +48,7 @@ Pass : admin<br>
 User : admin@gmail.com<br>
 
 # Check User Level
-controller.php
+controller.php<br>
 `//check user level`<br>
 `if(empty($data['role'])){`<br>
     `redirect(site_url().'main/login/');`<br>
@@ -59,3 +59,7 @@ controller.php
 `if($dataLevel == "is_admin"){`<br>
   `(your code here)`<br>
 `}`<br>
+
+# LICENSE
+The MIT License (MIT)<br>
+Copyright (c) 2017, Abed Putra<br>
