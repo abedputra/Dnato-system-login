@@ -189,8 +189,6 @@ class User_model extends CI_Model {
         return true;
     } 
     
-    //Custom Model--------------------------------------------------------------
-    
     //add user login
     public function addUser($d)
     {  
