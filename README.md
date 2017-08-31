@@ -5,7 +5,7 @@ Simple, Fast and Lightweight Auth System for CodeIgniter
 # Feature
 - Add user
 - Delete user
-- Ban user
+- Ban, Unban user
 - Register new user sent to email token
 - Forget password
 - Role user level
