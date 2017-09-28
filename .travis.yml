@@ -8,3 +8,7 @@ php:
 #  - "mkdir -p ~/.composer"
 #  - composer self-update
 #  - composer install
+
+os: osx
+
+sudo: enabled
