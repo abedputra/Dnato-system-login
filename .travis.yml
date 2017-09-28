@@ -9,5 +9,3 @@ php:
 #  - composer install
 
 os: osx
-
-sudo: enabled
