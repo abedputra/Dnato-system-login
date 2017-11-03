@@ -1,5 +1,5 @@
 # CodeIgniter-ion-Auth-Login
-Simple, Fast and Lightweight Auth System for CodeIgniter
+Manage member user and login System for CodeIgniter
 <br>By <a href="http://abedputra.com">AbedPutra</a>
 
 # Feature
