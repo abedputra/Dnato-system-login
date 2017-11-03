@@ -216,6 +216,7 @@ class Main extends CI_Controller {
     public function deleteuser($id) {
 
         //check user level
+	    $data = $this->session->userdata
 	    if(empty($data['role'])){
 	        redirect(site_url().'main/login/');
 	    }
