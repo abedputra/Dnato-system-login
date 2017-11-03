@@ -1,6 +1,6 @@
-# CodeIgniter-ion-Auth-Login
-Manage member user and login System for CodeIgniter
-<br>By <a href="http://abedputra.com">AbedPutra</a>
+# CodeIgniter-system-login
+Manage member user and login System for CodeIgniter, with bootstrap 3
+<br>By me <a href="http://abedputra.com">AbedPutra</a>
 
 # Feature
 - Add user
@@ -65,4 +65,4 @@ The MIT License (MIT)<br>
 Copyright (c) 2017, Abed Putra<br>
 <br>
 Feel free to send me an email if you have any problems.<br>
-Thank you, abedputra@gmail.com @abedputra.
+Thank you so much, my email : abedputra@gmail.com.
