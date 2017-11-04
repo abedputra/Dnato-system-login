@@ -11,6 +11,7 @@ class User_model extends CI_Model {
         parent::__construct();        
         $this->status = $this->config->item('status');
         $this->roles = $this->config->item('roles');
+        $this->banned_users = $this->config->item('banned_users');
     }    
     
     public function insertUser($d)
@@ -20,7 +21,8 @@ class User_model extends CI_Model {
                 'last_name'=>$d['lastname'],
                 'email'=>$d['email'],
                 'role'=>$this->roles[0], 
-                'status'=>$this->status[0]
+                'status'=>$this->status[0],
+                'banned_users'=>$this->banned_users[0]
             );
             $q = $this->db->insert_string('users',$string);             
             $this->db->query($q);
