@@ -22,7 +22,7 @@
                   <ul class="nav navbar-nav">
                     <li><a href="<?php echo site_url();?>main/"><i class="fa fa-tachometer" aria-hidden="true"></i> Dashboard</a></li>
                     <?php
-                        if($dataLevel == 'is_admin'){
+                        if($dataLevel == 'is_admin'){//Check user level if is Admin
                             echo'
                             <li class="dropdown">
                               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-users" aria-hidden="true"></i> Users <span class="caret"></span></a>
