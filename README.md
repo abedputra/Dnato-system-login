@@ -16,7 +16,9 @@ Manage member user and login System for CodeIgniter, it's very small and very fa
 
 # Settings
 - database.php
-`'hostname' => 'localhost', 'username' => '', 'password' => '', 'database' => '',`
+```
+'hostname' => 'localhost', 'username' => '', 'password' => '', 'database' => '',
+```
 
 - config.php
 ```
@@ -47,9 +49,8 @@ public $secret = ''; //Secret
 - Done
 
 # login
-visit http://(your link).com/admin<br>
-Pass : admin<br>
-User : admin@gmail.com<br>
+Pass : admin
+User : admin@gmail.com
 
 # Check User Level
 controller.php
