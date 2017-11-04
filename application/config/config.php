@@ -532,6 +532,7 @@ $config['proxy_ips'] = '';
 */
 $config['roles'] = array('4', '1');
 $config['status'] = array('pending', 'approved');
+$config['banned_users'] = array('unban', 'ban');
 
 /*
 |--------------------------------------------------------------------------
