@@ -215,9 +215,8 @@ class Main extends CI_Controller {
 
     public function deleteuser($id) {
 
-        //check user level
-	    $data = $this->session->userdata
-	    if(empty($data['role'])){
+            $data = $this->session->userdata;
+            if(empty($data['role'])){
 	        redirect(site_url().'main/login/');
 	    }
 	    $dataLevel = $this->userlevel->checkLevel($data['role']);
@@ -225,17 +224,16 @@ class Main extends CI_Controller {
 
 	    //check is admin or not
 	    if($dataLevel == "is_admin"){
-
-            $this->user_model->deleteUser($id);
-            if($this->user_model->deleteUser($id) == FALSE ){
-               $this->session->set_flashdata('flash_message', 'Error, cant delete the user!');
-            }
-            else{
-               $this->session->set_flashdata('success_message', 'Delete user was successful.');
-            }
-            redirect(site_url().'main/users/');
+		$this->user_model->deleteUser($id);
+		if($this->user_model->deleteUser($id) == FALSE ){
+		$this->session->set_flashdata('flash_message', 'Error, cant delete the user!');
+		}
+		else{
+		$this->session->set_flashdata('success_message', 'Delete user was successful.');
+		}
+		redirect(site_url().'main/users/');
 	    }else{
-	        redirect(site_url().'main/');
+		redirect(site_url().'main/');
 	    }
     }
 
