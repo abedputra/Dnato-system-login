@@ -72,7 +72,7 @@ if($dataLevel == "is_admin"){
 Dnato System Login is based frontend on the Bootstrap framework created by  [Mark Otto](https://twitter.com/mdo) and [Jacob Thorton](https://twitter.com/fat).
 Password hashing with PBKDF2, Author: [havoc AT defuse.ca](https://github.com/defuse).
 Ported to CodeIgniter by [Richard Thornton](http://twitter.com/RichardThornton). 
-CodeIgniter Curl Libraries by [Philip Sturgeon](https://github.com/philsturgeon/codeigniter-curl)Philip Sturgeon.
+CodeIgniter Curl Libraries by [Philip Sturgeon](https://github.com/philsturgeon/codeigniter-curl).
 
 # LICENSE
 The MIT License (MIT).
