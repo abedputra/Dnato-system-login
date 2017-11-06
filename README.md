@@ -49,8 +49,8 @@ public $secret = ''; //Secret
 - Done
 
 # login
-Pass : admin
-User : admin@gmail.com
+- Pass : admin
+- User : admin@gmail.com
 
 # Check User Level
 controller.php
