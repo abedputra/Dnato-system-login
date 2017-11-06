@@ -68,13 +68,15 @@ if($dataLevel == "is_admin"){
 ```
 
 # About
-Dnato System Login is based frontend on the Bootstrap framework created by <a href="https://twitter.com/mdo">Mark Otto</a> and <a href="https://twitter.com/fat">Jacob Thorton.</a>
-Password hashing with PBKDF2, Author: <a href="https://github.com/defuse">havoc AT defuse.ca.</a>
-Ported to CodeIgniter by <a href="http://twitter.com/RichardThornton">Richard Thornton</a>. CodeIgniter Curl Libraries by <a href="https://github.com/philsturgeon/codeigniter-curl">Philip Sturgeon</a>
+Dnato System Login is based frontend on the Bootstrap framework created by <a href="https://twitter.com/mdo">Mark Otto</a> and <a href="https://twitter.com/fat">Jacob Thorton.</a> 
+Password hashing with PBKDF2, Author: <a href="https://github.com/defuse">havoc AT defuse.ca.</a> 
+Ported to CodeIgniter by <a href="http://twitter.com/RichardThornton">Richard Thornton</a>. 
+CodeIgniter Curl Libraries by <a href="https://github.com/philsturgeon/codeigniter-curl">Philip Sturgeon.</a> 
 
 # LICENSE
-The MIT License (MIT)<br>
-Copyright (c) 2017, Abed Putra<br>
-<br>
-Please feel free to send me an email if you have any problems.<br>
+The MIT License (MIT).
+
+Copyright (c) 2017, Abed Putra. 
+ 
+Please feel free to send me an email if you have any problems. 
 Thank you so much, my email : abedputra@gmail.com.
