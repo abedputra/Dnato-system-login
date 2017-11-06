@@ -1,6 +1,7 @@
 # What is Dnato System Login?
 Manage member user and login System for CodeIgniter, it's very small and very fast login system, :+1: with bootstrap 3
-<br>Created By me <a href="http://abedputra.com">AbedPutra</a>
+
+Created By me [Abed Putra](http://abedputra.com)
 
 # Feature
 - Add user
@@ -68,10 +69,10 @@ if($dataLevel == "is_admin"){
 ```
 
 # About
-Dnato System Login is based frontend on the Bootstrap framework created by <a href="https://twitter.com/mdo">Mark Otto</a> and <a href="https://twitter.com/fat">Jacob Thorton.</a> 
-Password hashing with PBKDF2, Author: <a href="https://github.com/defuse">havoc AT defuse.ca.</a> 
-Ported to CodeIgniter by <a href="http://twitter.com/RichardThornton">Richard Thornton</a>. 
-CodeIgniter Curl Libraries by <a href="https://github.com/philsturgeon/codeigniter-curl">Philip Sturgeon.</a> 
+Dnato System Login is based frontend on the Bootstrap framework created by  [Mark Otto](https://twitter.com/mdo) and [Jacob Thorton](https://twitter.com/fat).
+Password hashing with PBKDF2, Author: [havoc AT defuse.ca](https://github.com/defuse).
+Ported to CodeIgniter by [Richard Thornton](http://twitter.com/RichardThornton). 
+CodeIgniter Curl Libraries by [Philip Sturgeon](https://github.com/philsturgeon/codeigniter-curl)Philip Sturgeon.
 
 # LICENSE
 The MIT License (MIT).
