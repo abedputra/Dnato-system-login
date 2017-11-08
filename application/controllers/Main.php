@@ -494,7 +494,7 @@ class Main extends CI_Controller {
                 $url = "https://www.google.com/recaptcha/api/siteverify?secret=".$key."&response=".$recaptchaResponse."&remoteip=".$userIp; //link
                 $response = $this->curl->simple_get($url);
                 $status= json_decode($response, true);
-
+		//check if all is good
                 if(!$userInfo){
                     $this->session->set_flashdata('flash_message', 'Wrong password or email.');
                     redirect(site_url().'main/login');
