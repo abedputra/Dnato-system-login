@@ -494,24 +494,28 @@ class Main extends CI_Controller {
                 $url = "https://www.google.com/recaptcha/api/siteverify?secret=".$key."&response=".$recaptchaResponse."&remoteip=".$userIp; //link
                 $response = $this->curl->simple_get($url);
                 $status= json_decode($response, true);
-		//check if all is good
+				//check if all is good
                 if(!$userInfo){
                     $this->session->set_flashdata('flash_message', 'Wrong password or email.');
                     redirect(site_url().'main/login');
                 }elseif($userInfo->banned_users == "ban"){
                     $this->session->set_flashdata('danger_message', 'You’re temporarily banned from our website!');
                     redirect(site_url().'main/login');
+                }elseif(!$status['success']{
+                    //recaptcha failed
+                    $this->session->set_flashdata('flash_message', 'Error...! Google Recaptcha UnSuccessful!');
+                    redirect(site_url().'main/login/');
+                    exit;
                 }elseif($status['success'] && $userInfo && $userInfo->banned_users == "unban"){ //recaptcha check, success login, ban or unban
                     foreach($userInfo as $key=>$val){
                     $this->session->set_userdata($key, $val);
                     }
                     redirect(site_url().'main/');
                 }else{
-                    //recaptcha failed
-                    $this->session->set_flashdata('flash_message', 'Error...! Google Recaptcha UnSuccessful!');
+		    $this->session->set_flashdata('flash_message', 'Error...! Something Error!');
                     redirect(site_url().'main/login/');
                     exit;
-                }
+		}
             }
 	    }
     }
