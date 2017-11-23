@@ -53,16 +53,16 @@ class Main extends CI_Controller {
 	        redirect(site_url().'main/login/');
 	    }
 	    
-	    $this->load->library('user_agent');
+	$this->load->library('user_agent');
         $browser = $this->agent->browser();
         $os = $this->agent->platform();
         $getip = $this->input->ip_address();
         
         $result = $this->user_model->getAllSettings();
         $stLe = $result->site_title;
-	    $tz = $result->timezone;
+	$tz = $result->timezone;
 	    
-	    $now = new DateTime();
+	$now = new DateTime();
         $now->setTimezone(new DateTimezone($tz));
         $dTod =  $now->format('Y-m-d');
         $dTim =  $now->format('H:i:s');
@@ -156,7 +156,7 @@ class Main extends CI_Controller {
 
 	}
     
-    //user list
+    	//user list
 	public function users()
 	{
 	    $data = $this->session->userdata;
@@ -182,7 +182,7 @@ class Main extends CI_Controller {
 	    }
 	}
 
-    //change level user
+    	//change level user
 	public function changelevel()
 	{
         $data = $this->session->userdata;
@@ -223,7 +223,7 @@ class Main extends CI_Controller {
 	    }
 	}
     
-    //ban or unban user
+    	//ban or unban user
 	public function banuser() 
 	{
         $data = $this->session->userdata;
@@ -577,7 +577,6 @@ class Main extends CI_Controller {
             $this->load->view('complete', $data);
             $this->load->view('footer');
         }else{
-
             $this->load->library('password');
             $post = $this->input->post(NULL, TRUE);
 
@@ -626,7 +625,6 @@ class Main extends CI_Controller {
                 $this->load->view('login');
                 $this->load->view('footer');
             }else{
-
                 $post = $this->input->post();
                 $clean = $this->security->xss_clean($post);
                 $userInfo = $this->user_model->checkLogin($clean);
