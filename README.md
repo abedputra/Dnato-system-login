@@ -1,7 +1,12 @@
 # What is Dnato System Login?
-Manage member user and login System for CodeIgniter, it's very small and very fast login system, :+1: with bootstrap 3
+Manage member user & login System for CodeIgniter. It's very small, secure (with notification to review activity log in, will Sent via Your Email) and very fast login system, :+1: with bootstrap 3 & Custom Theme.
 
 Created By me [Abed Putra](http://abedputra.com)
+
+# Screenshot
+<img width="100%" alt="Dnato System Login" src="https://user-images.githubusercontent.com/11581453/33157448-1e060436-d03d-11e7-9cf0-aeb408316c12.png">
+
+<img width="100%" alt="screen shot 2017-11-23 at 11 00 27" src="https://user-images.githubusercontent.com/11581453/33157515-913822ea-d03d-11e7-89a6-cc5395a37800.png">
 
 # Feature
 - Add user
@@ -14,6 +19,10 @@ Created By me [Abed Putra](http://abedputra.com)
 - Gravatar user profile
 - Recaptcha by Google
 - Compress HTML Settings for more speed
+- Account Secure (Notification to Review Activity Log In, Will Sent via Your Email like Google) :new: :tada:
+- Active or Unactive Recaptcha :new:
+- Add Settings :new:
+- Add Theme :new: :tada:
 
 # Settings
 - database.php
@@ -73,6 +82,7 @@ Dnato System Login is based on the [codeigniter](https://github.com/bcit-ci/Code
 Password hashing with PBKDF2, Author: [havoc AT defuse.ca](https://github.com/defuse).
 Ported to CodeIgniter by [Richard Thornton](http://twitter.com/RichardThornton). 
 CodeIgniter Curl Libraries by [Philip Sturgeon](https://github.com/philsturgeon/codeigniter-curl).
+Theme by [Bootswatch](https://github.com/thomaspark/bootswatch).
 
 # LICENSE
 The MIT License (MIT).
