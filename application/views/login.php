@@ -21,10 +21,13 @@
           'value'=> set_value('password'))); ?>
       <?php echo form_error('password') ?>
     </div>
+    <?php if($recaptcha == 'yes'){ ?>
     <div style="text-align:center;" class="form-group">
         <div style="display: inline-block;"><?php echo $this->recaptcha->render(); ?></div>
     </div>
-    <?php echo form_submit(array('value'=>'Let me in!', 'class'=>'btn btn-lg btn-primary btn-block')); ?>
+    <?php
+    }
+    echo form_submit(array('value'=>'Let me in!', 'class'=>'btn btn-lg btn-primary btn-block')); ?>
     <?php echo form_close(); ?>
     <br>
     <p>Not registered? <a href="<?php echo site_url();?>main/register">Register</a></p>

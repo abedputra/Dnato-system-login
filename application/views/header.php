@@ -1,5 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
+
+$result = $this->user_model->getAllSettings();
+$theme = $result->theme;
 ?>
 
 <!doctype html>
@@ -17,7 +20,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         
         <!--CSS-->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="<?php echo $theme; ?>">
         <link rel="stylesheet" href="<?php echo base_url().'public/css/main.css' ?>">
         
         <script src='https://www.google.com/recaptcha/api.js'></script>

@@ -14,6 +14,7 @@ class User_model extends CI_Model {
         $this->banned_users = $this->config->item('banned_users');
     }    
     
+    //insert user into database
     public function insertUser($d)
     {  
             $string = array(
@@ -29,12 +30,14 @@ class User_model extends CI_Model {
             return $this->db->insert_id();
     }
     
+    //check is duplicate
     public function isDuplicate($email)
     {     
         $this->db->get_where('users', array('email' => $email), 1);
         return $this->db->affected_rows() > 0 ? TRUE : FALSE;         
     }
     
+    //insert the token
     public function insertToken($user_id)
     {   
         $token = substr(sha1(rand()), 0, 30); 
@@ -51,6 +54,7 @@ class User_model extends CI_Model {
         
     }
     
+    //check if token is valid
     public function isTokenValid($token)
     {
        $tkn = substr($token,0,30);
@@ -81,6 +85,7 @@ class User_model extends CI_Model {
         
     }    
     
+    //get user info
     public function getUserInfo($id)
     {
         $q = $this->db->get_where('users', array('id' => $id), 1);  
@@ -93,7 +98,7 @@ class User_model extends CI_Model {
         }
     }
     
-    //---------getUserName
+    //getUserName
     public function getUserAllData($email)
     {
         $this->db->select('*');
@@ -113,6 +118,7 @@ class User_model extends CI_Model {
         }
     }
     
+    //update data user
     public function updateUserInfo($post)
     {
         $data = array(
@@ -133,6 +139,7 @@ class User_model extends CI_Model {
         return $user_info; 
     }
     
+    //check login
     public function checkLogin($post)
     {
         $this->load->library('password');       
@@ -159,6 +166,7 @@ class User_model extends CI_Model {
         return $userInfo; 
     }
     
+    //update time login
     public function updateLoginTime($id)
     {
         $this->db->where('id', $id);
@@ -166,6 +174,7 @@ class User_model extends CI_Model {
         return;
     }
     
+    //get user from email
     public function getUserInfoByEmail($email)
     {
         $q = $this->db->get_where('users', array('email' => $email), 1);  
@@ -178,6 +187,7 @@ class User_model extends CI_Model {
         }
     }
     
+    //update password
     public function updatePassword($post)
     {   
         $this->db->where('id', $post['user_id']);
@@ -226,7 +236,7 @@ class User_model extends CI_Model {
     {   
         $this->db->where('email', $post['email']);
         $this->db->update('users', array('role' => $post['level'])); 
-        $success = $this->db->affected_rows(); 
+        $success = $this->db->affected_rows();
         
         if(!$success){
             return false;
@@ -266,5 +276,33 @@ class User_model extends CI_Model {
         else {
             return TRUE;
         }
+    }
+    
+    //get settings
+    public function getAllSettings()
+    {
+        $this->db->select('*');
+        $this->db->from('settings');
+        return $this->db->get()->row();
+
+    }
+    
+    //do change settings
+    public function settings($post)
+    {   
+        $this->db->where('id', $post['id']);
+        $this->db->update('settings', 
+            array(
+                'site_title' => $post['site_title'], 
+                'timezone' => $post['timezone'],
+                'recaptcha' => $post['recaptcha'],
+                'theme' => $post['theme']
+            )
+        ); 
+        $success = $this->db->affected_rows(); 
+        if(!$success){
+            return false;
+        }        
+        return true;
     }
 }

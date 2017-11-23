@@ -1,6 +1,9 @@
         <?php
         //check user level
 	    $dataLevel = $this->userlevel->checkLevel($role);
+
+        $result = $this->user_model->getAllSettings();
+	    $site_title = $result->site_title;
 	    //check user level
         ?>
         <nav class="navbar navbar-inverse">
@@ -14,7 +17,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                   </button>
-                  <a class="navbar-brand" href="<?php echo site_url();?>main/">Brand</a>
+                  <a class="navbar-brand" href="<?php echo site_url();?>main/"><?php echo $site_title; ?></a>
                 </div>
             
                 <!-- Collect the nav links, forms, and other content for toggling -->
@@ -22,7 +25,7 @@
                   <ul class="nav navbar-nav">
                     <li><a href="<?php echo site_url();?>main/"><i class="fa fa-tachometer" aria-hidden="true"></i> Dashboard</a></li>
                     <?php
-                        if($dataLevel == 'is_admin'){//Check user level if is Admin
+                        if($dataLevel == 'is_admin'){ //Check user level if is Admin
                             echo'
                             <li class="dropdown">
                               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-users" aria-hidden="true"></i> Users <span class="caret"></span></a>
@@ -32,7 +35,9 @@
                                 <li><a href="'.site_url().'main/banuser">Ban User</a></li>
                                 <li><a href="'.site_url().'main/changelevel">Role</a></li>
                               </ul>
-                            </li>';
+                            </li>
+                            <li><a href="'.site_url().'main/settings"><i class="glyphicon glyphicon-cog" aria-hidden="true"></i> Setings</a></li>
+                            ';
                         }
                     ?>
                   </ul>

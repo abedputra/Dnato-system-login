@@ -333,6 +333,7 @@ class Main extends CI_Controller {
 
     //delete user
     public function deleteuser($id) {
+
             $data = $this->session->userdata;
             if(empty($data['role'])){
 	        redirect(site_url().'main/login/');
@@ -342,18 +343,16 @@ class Main extends CI_Controller {
 
 	    //check is admin or not
 	    if($dataLevel == "is_admin"){
-    		$this->user_model->deleteUser($id);
-    		if($this->user_model->deleteUser($id) == FALSE )
-    		{
-    		    $this->session->set_flashdata('flash_message', 'Error, cant delete the user!');
-    		}
-    		else
-    		{
-    		    $this->session->set_flashdata('success_message', 'Delete user was successful.');
-    		}
-    		redirect(site_url().'main/users/');
+		$this->user_model->deleteUser($id);
+		if($this->user_model->deleteUser($id) == FALSE ){
+		$this->session->set_flashdata('flash_message', 'Error, cant delete the user!');
+		}
+		else{
+		$this->session->set_flashdata('success_message', 'Delete user was successful.');
+		}
+		redirect(site_url().'main/users/');
 	    }else{
-		    redirect(site_url().'main/');
+		redirect(site_url().'main/');
 	    }
     }
 
@@ -374,6 +373,7 @@ class Main extends CI_Controller {
 
 	    //check is admin or not
 	    if($dataLevel == "is_admin"){
+
             $this->form_validation->set_rules('firstname', 'First Name', 'required');
             $this->form_validation->set_rules('lastname', 'Last Name', 'required');
             $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
@@ -382,6 +382,7 @@ class Main extends CI_Controller {
             $this->form_validation->set_rules('passconf', 'Password Confirmation', 'required|matches[password]');
 
             $data['title'] = "Add User";
+
             if ($this->form_validation->run() == FALSE) {
                 $this->load->view('header', $data);
                 $this->load->view('navbar');
@@ -401,15 +402,14 @@ class Main extends CI_Controller {
                     $cleanPost['role'] = $this->input->post('role');
                     $cleanPost['firstname'] = $this->input->post('firstname');
                     $cleanPost['lastname'] = $this->input->post('lastname');
-                    $cleanPost['banned_users'] = 'unban';
                     $cleanPost['password'] = $hashed;
                     unset($cleanPost['passconf']);
 
                     //insert to database
                     if(!$this->user_model->addUser($cleanPost)){
-                        $this->session->set_flashdata('flash_message', 'There was a problem add new user');
+                        $this->session->set_flashdata('flash_message', 'There was a problem updating your profile');
                     }else{
-                        $this->session->set_flashdata('success_message', 'New user has been added.');
+                        $this->session->set_flashdata('success_message', 'Your profile has been updated.');
                     }
                     redirect(site_url().'main/users/');
                 };
@@ -630,6 +630,7 @@ class Main extends CI_Controller {
                 $post = $this->input->post();
                 $clean = $this->security->xss_clean($post);
                 $userInfo = $this->user_model->checkLogin($clean);
+<<<<<<< HEAD
                 
                 if($data['recaptcha'] == 'yes'){
                     //recaptcha
@@ -669,8 +670,34 @@ class Main extends CI_Controller {
                         $this->session->set_flashdata('flash_message', 'Something Error!');
                         redirect(site_url().'main/login/');
                         exit;
+=======
+
+                //recaptcha
+                $recaptchaResponse = $this->input->post('g-recaptcha-response');
+                $userIp = $_SERVER['REMOTE_ADDR'];
+                $key = $this->recaptcha->secret;
+                $url = "https://www.google.com/recaptcha/api/siteverify?secret=".$key."&response=".$recaptchaResponse."&remoteip=".$userIp; //link
+                $response = $this->curl->simple_get($url);
+                $status= json_decode($response, true);
+				//check if all is good
+                if(!$userInfo){
+                    $this->session->set_flashdata('flash_message', 'Wrong password or email.');
+                    redirect(site_url().'main/login');
+                }elseif($userInfo->banned_users == "ban"){
+                    $this->session->set_flashdata('danger_message', 'You’re temporarily banned from our website!');
+                    redirect(site_url().'main/login');
+                }elseif(!$status['success']{
+                    //recaptcha failed
+                    $this->session->set_flashdata('flash_message', 'Error...! Google Recaptcha UnSuccessful!');
+                    redirect(site_url().'main/login/');
+                    exit;
+                }elseif($status['success'] && $userInfo && $userInfo->banned_users == "unban"){ //recaptcha check, success login, ban or unban
+                    foreach($userInfo as $key=>$val){
+                    $this->session->set_userdata($key, $val);
+>>>>>>> fe17eda0f3bf75249ad6c6fd22b5bb1c1de66740
                     }
                 }else{
+<<<<<<< HEAD
                     if(!$userInfo)
                     {
                         $this->session->set_flashdata('flash_message', 'Wrong password or email.');
@@ -695,6 +722,12 @@ class Main extends CI_Controller {
                         exit;
                     }
                 }
+=======
+		    $this->session->set_flashdata('flash_message', 'Error...! Something Error!');
+                    redirect(site_url().'main/login/');
+                    exit;
+		}
+>>>>>>> fe17eda0f3bf75249ad6c6fd22b5bb1c1de66740
             }
 	    }
     }
