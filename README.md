@@ -20,7 +20,7 @@ Created By me [Abed Putra](http://abedputra.com)
 - Recaptcha by Google
 - Compress HTML Settings for more speed
 - Account Secure (Notification to Review Activity Log In, Will Sent via Your Email like Google) :new: :tada:
-- Active or Unactive Recaptcha :new:
+- Active or Inactive Recaptcha :new:
 - Add Settings :new:
 - Add Theme :new: :tada:
 
