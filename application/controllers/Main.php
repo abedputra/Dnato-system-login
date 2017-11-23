@@ -16,6 +16,7 @@ class Main extends CI_Controller {
         $this->load->library('userlevel');
     }
 
+    //index dasboard
 	public function index()
 	{
 	    //user data from session
@@ -30,9 +31,9 @@ class Main extends CI_Controller {
 	    }
 	    $dataLevel = $this->userlevel->checkLevel($data['role']);
 	    //check user level
-
+        
 	    $data['title'] = "Dashboard Admin";
-
+	    
         if(empty($this->session->userdata['email'])){
             redirect(site_url().'main/login/');
         }else{
@@ -44,7 +45,118 @@ class Main extends CI_Controller {
         }
 
 	}
+	
+	public function checkLoginUser(){
+	     //user data from session
+	    $data = $this->session->userdata;
+	    if(empty($data)){
+	        redirect(site_url().'main/login/');
+	    }
+	    
+	    $this->load->library('user_agent');
+        $browser = $this->agent->browser();
+        $os = $this->agent->platform();
+        $getip = $this->input->ip_address();
+        
+        $result = $this->user_model->getAllSettings();
+        $stLe = $result->site_title;
+	    $tz = $result->timezone;
+	    
+	    $now = new DateTime();
+        $now->setTimezone(new DateTimezone($tz));
+        $dTod =  $now->format('Y-m-d');
+        $dTim =  $now->format('H:i:s');
+        
+        $this->load->helper('cookie');
+        $keyid = rand(1,9000);
+        $scSh = sha1($keyid);
+        $neMSC = md5($data['email']);
+        $setLogin = array(
+            'name'   => $neMSC,
+            'value'  => $scSh,
+            'expire' => strtotime("+2 year"),
+        );
+        $getAccess = get_cookie($neMSC);
+	    
+        if(!$getAccess && $setLogin["name"] == $neMSC){
+            $this->load->library('email');
+            $this->load->library('sendmail');
+            $bUrl = base_url();
+            $message = $this->sendmail->secureMail($data['first_name'],$data['last_name'],$data['email'],$dTod,$dTim,$stLe,$browser,$os,$getip,$bUrl);
+            $to_email = $data['email'];
+            $this->email->from($this->config->item('register'), 'New sign-in! from '.$browser.'');
+            $this->email->to($to_email);
+            $this->email->subject('New sign-in! from '.$browser.'');
+            $this->email->message($message);
+            $this->email->set_mailtype("html");
+            $this->email->send();
+            
+            $this->input->set_cookie($setLogin, TRUE);
+            redirect(site_url().'main/');
+        }else{
+            $this->input->set_cookie($setLogin, TRUE);
+            redirect(site_url().'main/');
+        }
+	}
+	
+	public function settings(){
+	    $data = $this->session->userdata;
+        if(empty($data['role'])){
+	        redirect(site_url().'main/login/');
+	    }
+	    $dataLevel = $this->userlevel->checkLevel($data['role']);
+	    //check user level
 
+        $data['title'] = "Settings";
+        $this->form_validation->set_rules('site_title', 'Site Title', 'required');
+        $this->form_validation->set_rules('timezone', 'Timezone', 'required');
+        $this->form_validation->set_rules('recaptcha', 'Recaptcha', 'required');
+        $this->form_validation->set_rules('theme', 'Theme', 'required');
+
+        $result = $this->user_model->getAllSettings();
+        $data['id'] = $result->id;
+	    $data['site_title'] = $result->site_title;
+	    $data['timezone'] = $result->timezone;
+	    
+	    if (!empty($data['timezone']))
+	    {
+	        $data['timezonevalue'] = $result->timezone;
+	        $data['timezone'] = $result->timezone;
+	    }
+	    else
+	    {
+	        $data['timezonevalue'] = "";
+            $data['timezone'] = "Select a time zone";
+	    }
+	    
+	    if($dataLevel == "is_admin"){
+            if ($this->form_validation->run() == FALSE) {
+                $this->load->view('header', $data);
+                $this->load->view('navbar', $data);
+                $this->load->view('container');
+                $this->load->view('settings', $data);
+                $this->load->view('footer');
+            }else{
+                $post = $this->input->post(NULL, TRUE);
+                $cleanPost = $this->security->xss_clean($post);
+                $cleanPost['id'] = $this->input->post('id');
+                $cleanPost['site_title'] = $this->input->post('site_title');
+                $cleanPost['timezone'] = $this->input->post('timezone');
+                $cleanPost['recaptcha'] = $this->input->post('recaptcha');
+                $cleanPost['theme'] = $this->input->post('theme');
+    
+                if(!$this->user_model->settings($cleanPost)){
+                    $this->session->set_flashdata('flash_message', 'There was a problem updating your data!');
+                }else{
+                    $this->session->set_flashdata('success_message', 'Your data has been updated.');
+                }
+                redirect(site_url().'main/settings/');
+            }
+	    }
+
+	}
+    
+    //user list
 	public function users()
 	{
 	    $data = $this->session->userdata;
@@ -70,7 +182,8 @@ class Main extends CI_Controller {
 	    }
 	}
 
-	public function changelevel() //level user
+    //change level user
+	public function changelevel()
 	{
         $data = $this->session->userdata;
         //check user level
@@ -109,8 +222,9 @@ class Main extends CI_Controller {
 	        redirect(site_url().'main/');
 	    }
 	}
-
-	public function banuser() //ban or unban user
+    
+    //ban or unban user
+	public function banuser() 
 	{
         $data = $this->session->userdata;
         //check user level
@@ -136,6 +250,8 @@ class Main extends CI_Controller {
                 $this->load->view('banuser', $data);
                 $this->load->view('footer');
             }else{
+                $post = $this->input->post(NULL, TRUE);
+                $cleanPost = $this->security->xss_clean($post);
                 $cleanPost['email'] = $this->input->post('email');
                 $cleanPost['banuser'] = $this->input->post('banuser');
                 if(!$this->user_model->updateUserban($cleanPost)){
@@ -150,7 +266,8 @@ class Main extends CI_Controller {
 	    }
 	}
 
-	public function changeuser() //edit user
+    //edit user
+	public function changeuser() 
     {
         $data = $this->session->userdata;
         if(empty($data['role'])){
@@ -197,6 +314,7 @@ class Main extends CI_Controller {
         }
     }
 
+    //open profile and gravatar user
     public function profile()
     {
         $data = $this->session->userdata;
@@ -213,8 +331,8 @@ class Main extends CI_Controller {
 
     }
 
+    //delete user
     public function deleteuser($id) {
-
             $data = $this->session->userdata;
             if(empty($data['role'])){
 	        redirect(site_url().'main/login/');
@@ -224,19 +342,22 @@ class Main extends CI_Controller {
 
 	    //check is admin or not
 	    if($dataLevel == "is_admin"){
-		$this->user_model->deleteUser($id);
-		if($this->user_model->deleteUser($id) == FALSE ){
-		$this->session->set_flashdata('flash_message', 'Error, cant delete the user!');
-		}
-		else{
-		$this->session->set_flashdata('success_message', 'Delete user was successful.');
-		}
-		redirect(site_url().'main/users/');
+    		$this->user_model->deleteUser($id);
+    		if($this->user_model->deleteUser($id) == FALSE )
+    		{
+    		    $this->session->set_flashdata('flash_message', 'Error, cant delete the user!');
+    		}
+    		else
+    		{
+    		    $this->session->set_flashdata('success_message', 'Delete user was successful.');
+    		}
+    		redirect(site_url().'main/users/');
 	    }else{
-		redirect(site_url().'main/');
+		    redirect(site_url().'main/');
 	    }
     }
 
+    //add new user from backend
     public function adduser()
     {
         $data = $this->session->userdata;
@@ -253,7 +374,6 @@ class Main extends CI_Controller {
 
 	    //check is admin or not
 	    if($dataLevel == "is_admin"){
-
             $this->form_validation->set_rules('firstname', 'First Name', 'required');
             $this->form_validation->set_rules('lastname', 'Last Name', 'required');
             $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
@@ -262,7 +382,6 @@ class Main extends CI_Controller {
             $this->form_validation->set_rules('passconf', 'Password Confirmation', 'required|matches[password]');
 
             $data['title'] = "Add User";
-
             if ($this->form_validation->run() == FALSE) {
                 $this->load->view('header', $data);
                 $this->load->view('navbar');
@@ -282,14 +401,15 @@ class Main extends CI_Controller {
                     $cleanPost['role'] = $this->input->post('role');
                     $cleanPost['firstname'] = $this->input->post('firstname');
                     $cleanPost['lastname'] = $this->input->post('lastname');
+                    $cleanPost['banned_users'] = 'unban';
                     $cleanPost['password'] = $hashed;
                     unset($cleanPost['passconf']);
 
                     //insert to database
                     if(!$this->user_model->addUser($cleanPost)){
-                        $this->session->set_flashdata('flash_message', 'There was a problem updating your profile');
+                        $this->session->set_flashdata('flash_message', 'There was a problem add new user');
                     }else{
-                        $this->session->set_flashdata('success_message', 'Your profile has been updated.');
+                        $this->session->set_flashdata('success_message', 'New user has been added.');
                     }
                     redirect(site_url().'main/users/');
                 };
@@ -299,6 +419,7 @@ class Main extends CI_Controller {
 	    }
     }
 
+    //register new user from frontend
     public function register()
     {
         $data['title'] = "Register to Admin";
@@ -307,6 +428,10 @@ class Main extends CI_Controller {
         $this->form_validation->set_rules('firstname', 'First Name', 'required');
         $this->form_validation->set_rules('lastname', 'Last Name', 'required');
         $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
+        
+        $result = $this->user_model->getAllSettings();
+        $sTl = $result->site_title;
+        $data['recaptcha'] = $result->recaptcha;
 
         if ($this->form_validation->run() == FALSE) {
             $this->load->view('header', $data);
@@ -318,56 +443,74 @@ class Main extends CI_Controller {
                 $this->session->set_flashdata('flash_message', 'User email already exists');
                 redirect(site_url().'main/register');
             }else{
-                $clean = $this->security->xss_clean($this->input->post(NULL, TRUE));
+                $post = $this->input->post(NULL, TRUE);
+                $clean = $this->security->xss_clean($post);
 
-                //recaptcha
-                $recaptchaResponse = $this->input->post('g-recaptcha-response');
-                $userIp = $_SERVER['REMOTE_ADDR'];
-                $key = $this->recaptcha->secret;
-                $url = "https://www.google.com/recaptcha/api/siteverify?secret=".$key."&response=".$recaptchaResponse."&remoteip=".$userIp; //link
-                $response = $this->curl->simple_get($url);
-                $status= json_decode($response, true);
-
-                //recaptcha check
-                if($status['success']){
+                if($data['recaptcha'] == 'yes'){
+                    //recaptcha
+                    $recaptchaResponse = $this->input->post('g-recaptcha-response');
+                    $userIp = $_SERVER['REMOTE_ADDR'];
+                    $key = $this->recaptcha->secret;
+                    $url = "https://www.google.com/recaptcha/api/siteverify?secret=".$key."&response=".$recaptchaResponse."&remoteip=".$userIp; //link
+                    $response = $this->curl->simple_get($url);
+                    $status= json_decode($response, true);
+    
+                    //recaptcha check
+                    if($status['success']){
+                        //insert to database
+                        $id = $this->user_model->insertUser($clean);
+                        $token = $this->user_model->insertToken($id);
+    
+                        //generate token
+                        $qstring = $this->base64url_encode($token);
+                        $url = site_url() . 'main/complete/token/' . $qstring;
+                        $link = '<a href="' . $url . '">' . $url . '</a>';
+    
+                        $this->load->library('email');
+                        $this->load->library('sendmail');
+                        
+                        $message = $this->sendmail->sendRegister($this->input->post('lastname'),$this->input->post('email'),$link, $sTl);
+                        $to_email = $this->input->post('email');
+                        $this->email->from($this->config->item('register'), 'Set Password ' . $this->input->post('firstname') .' '. $this->input->post('lastname')); //from sender, title email
+                        $this->email->to($to_email);
+                        $this->email->subject('Set Password Login');
+                        $this->email->message($message);
+                        $this->email->set_mailtype("html");
+    
+                        //Sending mail
+                        if($this->email->send()){
+                            redirect(site_url().'main/successregister/');
+                        }else{
+                            $this->session->set_flashdata('flash_message', 'There was a problem sending an email.');
+                            exit;
+                        }
+                    }else{
+                        //recaptcha failed
+                        $this->session->set_flashdata('flash_message', 'Error...! Google Recaptcha UnSuccessful!');
+                        redirect(site_url().'main/register/');
+                        exit;
+                    }
+                }else{
                     //insert to database
                     $id = $this->user_model->insertUser($clean);
                     $token = $this->user_model->insertToken($id);
-
+    
                     //generate token
                     $qstring = $this->base64url_encode($token);
                     $url = site_url() . 'main/complete/token/' . $qstring;
                     $link = '<a href="' . $url . '">' . $url . '</a>';
-
-                    //send to email
-                    //content
-                    $message = '';
-                    $message .= 'Hello, ' .$this->input->post('lastname') .'<br>';
-                    $message .= '<br>';
-                    $message .= 'Welcome! you have signed up with our website with the following information:<br>';
-                    $message .= '<br>';
-                    $message .= '<strong>Username : '. $this->input->post('email') .'</strong><br>';
-                    $message .= '<strong>Password : (Not Set) </strong><br>';
-                    $message .= '<br>';
-                    $message .= 'Before you can login, you need to activate and set your Password';
-                    $message .= '<br>';
-                    $message .= 'account by clicking on this link:';
-                    $message .= '<br><br>';
-                    $message .= $link . '<br>';
-                    $message .= '<br>';
-                    $message .= 'Thank You';
-
-                    $to_email = $this->input->post('email'); //send to
-
-                    //Load email library
+    
                     $this->load->library('email');
-
+                    $this->load->library('sendmail');
+                    
+                    $message = $this->sendmail->sendRegister($this->input->post('lastname'),$this->input->post('email'),$link,$sTl);
+                    $to_email = $this->input->post('email');
                     $this->email->from($this->config->item('register'), 'Set Password ' . $this->input->post('firstname') .' '. $this->input->post('lastname')); //from sender, title email
                     $this->email->to($to_email);
                     $this->email->subject('Set Password Login');
                     $this->email->message($message);
-                    $this->email->set_mailtype("html"); //type is HTML
-
+                    $this->email->set_mailtype("html");
+    
                     //Sending mail
                     if($this->email->send()){
                         redirect(site_url().'main/successregister/');
@@ -375,16 +518,12 @@ class Main extends CI_Controller {
                         $this->session->set_flashdata('flash_message', 'There was a problem sending an email.');
                         exit;
                     }
-                }else{
-                    //recaptcha failed
-                    $this->session->set_flashdata('flash_message', 'Error...! Google Recaptcha UnSuccessful!');
-                    redirect(site_url().'main/register/');
-                    exit;
                 }
             };
         }
     }
 
+    //if success new user register
     public function successregister()
     {
         $data['title'] = "Success Register";
@@ -394,6 +533,7 @@ class Main extends CI_Controller {
         $this->load->view('footer');
     }
 
+    //if success after set password
     public function successresetpassword()
     {
         $data['title'] = "Success Reset Password";
@@ -403,11 +543,11 @@ class Main extends CI_Controller {
         $this->load->view('footer');
     }
 
-
     protected function _islocal(){
         return strpos($_SERVER['HTTP_HOST'], 'local');
     }
 
+    //check if complate after add new user
     public function complete()
     {
         $token = base64_decode($this->uri->segment(4));
@@ -463,6 +603,7 @@ class Main extends CI_Controller {
         }
     }
 
+    //check login failed or success
     public function login()
     {
         $data = $this->session->userdata;
@@ -473,8 +614,11 @@ class Main extends CI_Controller {
             $this->load->library('recaptcha');
             $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
             $this->form_validation->set_rules('password', 'Password', 'required');
-
+            
             $data['title'] = "Welcome Back!";
+            
+            $result = $this->user_model->getAllSettings();
+            $data['recaptcha'] = $result->recaptcha;
 
             if($this->form_validation->run() == FALSE) {
                 $this->load->view('header', $data);
@@ -486,52 +630,93 @@ class Main extends CI_Controller {
                 $post = $this->input->post();
                 $clean = $this->security->xss_clean($post);
                 $userInfo = $this->user_model->checkLogin($clean);
-
-                //recaptcha
-                $recaptchaResponse = $this->input->post('g-recaptcha-response');
-                $userIp = $_SERVER['REMOTE_ADDR'];
-                $key = $this->recaptcha->secret;
-                $url = "https://www.google.com/recaptcha/api/siteverify?secret=".$key."&response=".$recaptchaResponse."&remoteip=".$userIp; //link
-                $response = $this->curl->simple_get($url);
-                $status= json_decode($response, true);
-				//check if all is good
-                if(!$userInfo){
-                    $this->session->set_flashdata('flash_message', 'Wrong password or email.');
-                    redirect(site_url().'main/login');
-                }elseif($userInfo->banned_users == "ban"){
-                    $this->session->set_flashdata('danger_message', 'You’re temporarily banned from our website!');
-                    redirect(site_url().'main/login');
-                }elseif(!$status['success']{
-                    //recaptcha failed
-                    $this->session->set_flashdata('flash_message', 'Error...! Google Recaptcha UnSuccessful!');
-                    redirect(site_url().'main/login/');
-                    exit;
-                }elseif($status['success'] && $userInfo && $userInfo->banned_users == "unban"){ //recaptcha check, success login, ban or unban
-                    foreach($userInfo as $key=>$val){
-                    $this->session->set_userdata($key, $val);
+                
+                if($data['recaptcha'] == 'yes'){
+                    //recaptcha
+                    $recaptchaResponse = $this->input->post('g-recaptcha-response');
+                    $userIp = $_SERVER['REMOTE_ADDR'];
+                    $key = $this->recaptcha->secret;
+                    $url = "https://www.google.com/recaptcha/api/siteverify?secret=".$key."&response=".$recaptchaResponse."&remoteip=".$userIp; //link
+                    $response = $this->curl->simple_get($url);
+                    $status= json_decode($response, true);
+    
+                    if(!$userInfo)
+                    {
+                        $this->session->set_flashdata('flash_message', 'Wrong password or email.');
+                        redirect(site_url().'main/login');
                     }
-                    redirect(site_url().'main/');
+                    elseif($userInfo->banned_users == "ban")
+                    {
+                        $this->session->set_flashdata('danger_message', 'You’re temporarily banned from our website!');
+                        redirect(site_url().'main/login');
+                    }
+                    else if(!$status['success'])
+                    {
+                        //recaptcha failed
+                        $this->session->set_flashdata('flash_message', 'Error...! Google Recaptcha UnSuccessful!');
+                        redirect(site_url().'main/login/');
+                        exit;
+                    }
+                    elseif($status['success'] && $userInfo && $userInfo->banned_users == "unban") //recaptcha check, success login, ban or unban
+                    {
+                        foreach($userInfo as $key=>$val){
+                        $this->session->set_userdata($key, $val);
+                        }
+                        redirect(site_url().'main/checkLoginUser/');
+                    }
+                    else
+                    {
+                        $this->session->set_flashdata('flash_message', 'Something Error!');
+                        redirect(site_url().'main/login/');
+                        exit;
+                    }
                 }else{
-		    $this->session->set_flashdata('flash_message', 'Error...! Something Error!');
-                    redirect(site_url().'main/login/');
-                    exit;
-		}
+                    if(!$userInfo)
+                    {
+                        $this->session->set_flashdata('flash_message', 'Wrong password or email.');
+                        redirect(site_url().'main/login');
+                    }
+                    elseif($userInfo->banned_users == "ban")
+                    {
+                        $this->session->set_flashdata('danger_message', 'You’re temporarily banned from our website!');
+                        redirect(site_url().'main/login');
+                    }
+                    elseif($userInfo && $userInfo->banned_users == "unban") //recaptcha check, success login, ban or unban
+                    {
+                        foreach($userInfo as $key=>$val){
+                        $this->session->set_userdata($key, $val);
+                        }
+                        redirect(site_url().'main/checkLoginUser/');
+                    }
+                    else
+                    {
+                        $this->session->set_flashdata('flash_message', 'Something Error!');
+                        redirect(site_url().'main/login/');
+                        exit;
+                    }
+                }
             }
 	    }
     }
 
+    //Logout
     public function logout()
     {
         $this->session->sess_destroy();
         redirect(site_url().'main/login/');
     }
 
+    //forgot password
     public function forgot()
     {
         $data['title'] = "Forgot Password";
         $this->load->library('curl');
         $this->load->library('recaptcha');
         $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
+        
+        $result = $this->user_model->getAllSettings();
+        $sTl = $result->site_title;
+        $data['recaptcha'] = $result->recaptcha;
 
         if($this->form_validation->run() == FALSE) {
             $this->load->view('header', $data);
@@ -553,68 +738,78 @@ class Main extends CI_Controller {
                 redirect(site_url().'main/login');
             }
 
-            //recaptcha
-            $recaptchaResponse = $this->input->post('g-recaptcha-response');
-            $userIp = $_SERVER['REMOTE_ADDR'];
-            $key = $this->recaptcha->secret;
-            $url = "https://www.google.com/recaptcha/api/siteverify?secret=".$key."&response=".$recaptchaResponse."&remoteip=".$userIp; //link
-            $response = $this->curl->simple_get($url);
-            $status= json_decode($response, true);
-
-            //recaptcha check
-            if($status['success']){
-
+            if($data['recaptcha'] == 'yes'){
+                //recaptcha
+                $recaptchaResponse = $this->input->post('g-recaptcha-response');
+                $userIp = $_SERVER['REMOTE_ADDR'];
+                $key = $this->recaptcha->secret;
+                $url = "https://www.google.com/recaptcha/api/siteverify?secret=".$key."&response=".$recaptchaResponse."&remoteip=".$userIp; //link
+                $response = $this->curl->simple_get($url);
+                $status= json_decode($response, true);
+    
+                //recaptcha check
+                if($status['success']){
+    
+                    //generate token
+                    $token = $this->user_model->insertToken($userInfo->id);
+                    $qstring = $this->base64url_encode($token);
+                    $url = site_url() . 'main/reset_password/token/' . $qstring;
+                    $link = '<a href="' . $url . '">' . $url . '</a>';
+    
+                    $this->load->library('email');
+                    $this->load->library('sendmail');
+                    
+                    $message = $this->sendmail->sendForgot($this->input->post('lastname'),$this->input->post('email'),$link,$sTl);
+                    $to_email = $this->input->post('email');
+                    $this->email->from($this->config->item('forgot'), 'Reset Password! ' . $this->input->post('firstname') .' '. $this->input->post('lastname')); //from sender, title email
+                    $this->email->to($to_email);
+                    $this->email->subject('Reset Password');
+                    $this->email->message($message);
+                    $this->email->set_mailtype("html");
+    
+                    if($this->email->send()){
+                        redirect(site_url().'main/successresetpassword/');
+                    }else{
+                        $this->session->set_flashdata('flash_message', 'There was a problem sending an email.');
+                        exit;
+                    }
+                }else{
+                    //recaptcha failed
+                    $this->session->set_flashdata('flash_message', 'Error...! Google Recaptcha UnSuccessful!');
+                    redirect(site_url().'main/register/');
+                    exit;
+                }
+            }else{
                 //generate token
                 $token = $this->user_model->insertToken($userInfo->id);
                 $qstring = $this->base64url_encode($token);
                 $url = site_url() . 'main/reset_password/token/' . $qstring;
                 $link = '<a href="' . $url . '">' . $url . '</a>';
 
-                //send to email
-                //content
-                $message = '';
-                $message .= 'Hello, ' .$this->input->post('lastname') .'<br>';
-                $message .= '<br>';
-                $message .= 'We\'ve generated a new password for you at your<br>';
-                $message .= 'request, you can use this new password with your username:<br>';
-                $message .= '<br>';
-                $message .= '<strong>Username : '. $this->input->post('email') .'</strong><br>';
-                $message .= '<strong>Password : (Forgot Password) </strong><br>';
-                $message .= '<br>';
-                $message .= 'To reset your Password please, clicking on this link:';
-                $message .= '<br><br>';
-                $message .= $link . '<br>';
-                $message .= '<br>';
-                $message .= 'Thank You';
-
-                $to_email = $this->input->post('email'); //send to
-
-                //Load email library
                 $this->load->library('email');
-
+                $this->load->library('sendmail');
+                
+                $message = $this->sendmail->sendForgot($this->input->post('lastname'),$this->input->post('email'),$link,$sTl);
+                $to_email = $this->input->post('email');
                 $this->email->from($this->config->item('forgot'), 'Reset Password! ' . $this->input->post('firstname') .' '. $this->input->post('lastname')); //from sender, title email
                 $this->email->to($to_email);
                 $this->email->subject('Reset Password');
                 $this->email->message($message);
-                $this->email->set_mailtype("html"); //type is HTML
+                $this->email->set_mailtype("html");
 
-                //Sending mail
                 if($this->email->send()){
                     redirect(site_url().'main/successresetpassword/');
                 }else{
                     $this->session->set_flashdata('flash_message', 'There was a problem sending an email.');
                     exit;
                 }
-            }else{
-                //recaptcha failed
-                $this->session->set_flashdata('flash_message', 'Error...! Google Recaptcha UnSuccessful!');
-                redirect(site_url().'main/register/');
-                exit;
             }
+            
         }
 
     }
 
+    //reset password
     public function reset_password()
     {
         $token = $this->base64url_decode($this->uri->segment(4));
@@ -654,7 +849,7 @@ class Main extends CI_Controller {
             }else{
                 $this->session->set_flashdata('success_message', 'Your password has been updated. You may now login');
             }
-            redirect(site_url().'main/login');
+            redirect(site_url().'main/checkLoginUser');
         }
     }
 
