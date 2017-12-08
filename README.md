@@ -84,6 +84,9 @@ Ported to CodeIgniter by [Richard Thornton](http://twitter.com/RichardThornton).
 CodeIgniter Curl Libraries by [Philip Sturgeon](https://github.com/philsturgeon).
 Theme by [Bootswatch](https://github.com/thomaspark/bootswatch).
 
+# Support me
+Support me at <a href="https://www.patreon.com/abedputra">Patron</a>
+
 # LICENSE
 The MIT License (MIT).
 
