@@ -8,7 +8,7 @@ Created By me [Abed Putra](http://abedputra.com)
 
 <img width="100%" alt="screen shot 2017-11-23 at 11 00 27" src="https://user-images.githubusercontent.com/11581453/33157515-913822ea-d03d-11e7-89a6-cc5395a37800.png">
 
-# Feature
+# Features
 - Add user
 - Delete user
 - Ban, Unban user
