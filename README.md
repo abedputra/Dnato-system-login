@@ -18,8 +18,8 @@ Created By me [Abed Putra](http://abedputra.com)
 - Edit user profile
 - Gravatar user profile
 - Recaptcha by Google
-- Compress HTML Settings for more speed
-- Account Secure (Notification to Review Activity Log In, Will Sent via Email like Google) :new: :tada:
+- Compress HTML Settings, for more speed
+- Secure Account (Notification to Review Activity Log In, Will Sent via Email like Google) :new: :tada:
 - Active or Inactive Recaptcha :new:
 - Add Settings :new:
 - Add Theme :new: :tada:
