@@ -3,7 +3,7 @@
     <footer>
         <div class="col-md-12" style="text-align:center;">
             <hr>
-            Copyright - 2017 | <a href="http://abedputra.com">abedputra.com</a>
+            Copyright - 2017 | <a href="https://webite.com">https://webite.com</a>
         </div>
     </footer>
     </div><!-- /container -->  
