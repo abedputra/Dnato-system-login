@@ -22,9 +22,10 @@ class Item extends REST_Controller {
 	public function index_get($id = 0)
 	{
         if(!empty($id)){
-            $data = $this->db->get_where("items", ['id' => $id])->row_array();
+            $data = $this->db->get_where("users", ['id' => $id])->row_array();
+            //$this->db->last_query();
         }else{
-            $data = $this->db->get("items")->result();
+            $data = $this->db->get("users")->result();
         }
      
         $this->response($data, REST_Controller::HTTP_OK);
