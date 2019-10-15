@@ -1,7 +1,7 @@
 # What is Dnato System Login?
 Manage member user & login System for CodeIgniter. It's very small, secure (with notification to review activity log in, will Sent via Your Email) and very fast login system, :+1: with bootstrap 3 & Custom Theme.
 
-Created By me [Abed Putra](http://abedputra.com)
+Created By me [Abed Putra](https://connectwithdev.com/)
 
 # Screenshot
 <img width="100%" alt="Dnato System Login" src="https://user-images.githubusercontent.com/11581453/33157448-1e060436-d03d-11e7-9cf0-aeb408316c12.png">
