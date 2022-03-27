@@ -3,6 +3,8 @@ Manage member user & login System for CodeIgniter. It's very small, secure (with
 
 Created By me [Abed Putra](https://connectwithdev.com/)
 
+<a href="https://www.codefactor.io/repository/github/abedputra/dnato-system-login" rel="ugc"><img src="https://www.codefactor.io/repository/github/abedputra/dnato-system-login?logo=codefactor&amp;style=for-the-badge" alt="CodeFactor Grade"></a>
+
 # Screenshot
 <img width="100%" alt="Dnato System Login" src="https://user-images.githubusercontent.com/11581453/33157448-1e060436-d03d-11e7-9cf0-aeb408316c12.png">
 
